@@ -1,0 +1,56 @@
+---
+- name: GET DRUPAL
+  get_url: 
+    url: https://ftp.drupal.org/files/projects/drupal-8.6.2.tar.gz
+    dest: /tmp/drupal-8.6.2.tar.gz
+    mode: 755
+
+- name: EXTRACT DRUPAL
+  unarchive: src=/tmp/drupal-8.6.2.tar.gz  dest=/tmp copy=no 
+
+- name: CHANGE PERMISSION 
+  file:
+    path: /tmp/drupal-8.6.2
+    owner: www-data
+    group: www-data
+
+- name: COPY DRUPAL FOLDER IN VAR/WWW/HTML
+  command: cp -r /tmp/drupal-8.6.2/. /var/www/html/
+ 
+- name: CHANGE PERMISSION HTML
+  file:
+    path: /var/www/html
+    owner: www-data
+    group: www-data
+
+- name: CREATE NEW FOLDER FILES
+  file:
+    path: /var/www/html/sites/default/files
+    state: directory
+    mode: '0777'
+   
+- name: COPY settings.php in DEFAULT FOLDER
+  copy:
+    src: "/home/drupal/roles/drupal/files/settings.php"
+    dest: "/var/www/html/sites/default/"
+    mode: '0777'
+  
+- name: COPY FOR CONFIG APACHE
+  copy:
+    src: "/home/drupal/roles/drupal/files/000-default.conf"
+    dest: "/etc/apache2/sites-enabled/"
+
+
+
+- name: RESTART APACHE2
+  service: name=apache2 state=restarted
+
+- name: TEST
+  uri:
+    url: http://localhost
+    return_content: yes
+  register: this
+  failed_when: "'Drupal' not in this.content"
+
+- debug:
+    msg: "{{ this }}"  

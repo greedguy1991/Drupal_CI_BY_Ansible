@@ -1,0 +1,30 @@
+---
+# APT UPDATE and INSTALL LAMP ON UBUNTU 18.04
+- name: APT UPDATE
+  apt:
+    update_cache: yes
+
+- name: INSTALL APACHE2
+  apt: name=apache2 state=present
+
+
+- name: INSTALL PHP
+  apt: name=php state=latest
+
+- name: INSTALL PHP-MYSQL
+  apt: name=php-mysql state=latest
+
+- name: INSTALL MYSQL-SERVER
+  apt: name=mysql-server state=latest
+
+- name: INSTALL MYSQL-SERVER
+  apt:
+    name: "{{ pack }}"
+  vars:
+    pack:
+      - mysql-client
+      - python-mysqldb
+      - php-xml
+      - php-gd
+      - php-mbstring
+

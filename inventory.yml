@@ -1,0 +1,7 @@
+# ANSIBLE HOST UBUNTU 18.04 SERVER .WITH SUDO USER KIR
+---
+all: 
+  hosts:
+    drupal1:
+      ansible_host: 192.168.100.8      
+      ansible_user: kir      
